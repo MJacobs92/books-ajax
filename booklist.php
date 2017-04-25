@@ -2,9 +2,6 @@
 
 	  error_reporting(E_ALL);
 	  ini_set('display_errors', 1);
-?>
-
-<?php
 
 $format = $_GET["format"];
 $category = $_GET["category"];
@@ -16,10 +13,55 @@ $row = mysqli_fetch_assoc($returnedCategory);
 
 $categoryId = $row['id'];
 
-$sqlQuery = "SELECT Book_Title.title, Book_Author.author, Book_Year.year, Book_Price.price FROM Book_Title Join Book_Author on Book_Title.id=Book_Author.title_id Join Book_Year on Book_Title.id=Book_Year.title_id Join Book_Price On Book_Title.id=Book_Price.title_id where Book_Title.cat_id = $categoryId . ";"";
-
+$sqlQuery = "SELECT Book_Title.title, Book_Author.author, Book_Year.year, Book_Price.price FROM Book_Title JOIN Book_Author ON Book_Title.id=Book_Author.title_id JOIN Book_Year ON Book_Title.id=Book_Year.title_id JOIN Book_Price ON Book_Title.id=Book_Price.title_id WHERE Book_Title.cat_id = $categoryId ;";
 
 $results = mysqli_query($conn, $sqlQuery);
+
+$rows=mysqli_fetch_all($results,MYSQLI_ASSOC);
+
+$books = [ "books" => $rows];
+
+if ($format == "json") {
+	header("Content-type: application/json");
+	echo json_encode($books);
+}
+else{
+
+	header("Content-type: application/xml");
+
+	$doc = new DOMDocument();
+	$doc->formatOutput = true;
+
+	$r = $doc->createElement( "books" );
+	$doc->appendChild( $r );
+
+	foreach( $books['books'] as $book )
+	{
+		$b = $doc->createElement("book");
+
+		$title = $doc->createElement("title");
+		$title->appendChild($doc->createTextNode($book['title']));
+		$b->appendChild($title);
+
+		$author = $doc->createElement("author");
+		$author->appendChild($doc->createTextNode($book['author']));
+		$b->appendChild($author);
+
+		$year = $doc->createElement("year");
+		$year->appendChild($doc->createTextNode($book['year']));
+		$b->appendChild($year);
+
+		$price = $doc->createElement("price");
+		$price->appendChild($doc->createTextNode($book['price']));
+		$b->appendChild($price);
+
+		$r->appendChild($b);
+	}
+
+	echo $doc->saveXML();
+}
+
+
 
 
 ?>
