@@ -15,6 +15,7 @@ function submitRequest() {
 
 function handleRequestSuccess(ajax) {
 	alert(ajax.responseXML);
+
 }
 
 function handleRequestFailure(ajax, exception) {
