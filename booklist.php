@@ -13,7 +13,7 @@ $row = mysqli_fetch_assoc($returnedCategory);
 
 $categoryId = $row['id'];
 
-$sqlQuery = "SELECT Book_Title.title, Book_Author.author, Book_Year.year, Book_Price.price FROM Book_Title JOIN Book_Author ON Book_Title.id=Book_Author.title_id JOIN Book_Year ON Book_Title.id=Book_Year.title_id JOIN Book_Price ON Book_Title.id=Book_Price.title_id WHERE Book_Title.cat_id = $categoryId ;";
+$sqlQuery = "SELECT Book_Category.category, Book_Title.title, Book_Author.author, Book_Year.year, Book_Price.price FROM Book_Title JOIN Book_Category ON Book_Title.cat_id=Book_Category.id JOIN Book_Author ON Book_Title.id=Book_Author.title_id JOIN Book_Year ON Book_Title.id=Book_Year.title_id JOIN Book_Price ON Book_Title.id=Book_Price.title_id WHERE Book_Title.cat_id = $categoryId ;";
 
 $results = mysqli_query($conn, $sqlQuery);
 
@@ -38,6 +38,10 @@ else{
 	foreach( $books['books'] as $book )
 	{
 		$b = $doc->createElement("book");
+
+		$category = $doc->createElement("category");
+		$category->appendChild($doc->createTextNode($book['category']));
+		$b->appendChild($category);
 
 		$title = $doc->createElement("title");
 		$title->appendChild($doc->createTextNode($book['title']));
