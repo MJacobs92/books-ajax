@@ -1,12 +1,13 @@
 "use strict";
 
 function initialLoad() {
-	$('listBooks').onclick = addButtonClicked;
+	$('listBooks').onclick = submitRequest;
 }
 
 function submitRequest() {
 	 new Ajax.Request('/booklist.php', {
      	method: 'get',
+     	parameters: {format:document.URL.toQueryParams().format, category: $$('input:checked[name="bookCategory"]')[0].value},
         onSuccess: handleRequestSuccess,
         onFailure:  handleRequestFailure,
         onException:  handleRequestFailure
@@ -14,7 +15,14 @@ function submitRequest() {
 }
 
 function handleRequestSuccess(ajax) {
-	alert(ajax.responseXML);
+
+	if(document.URL.toQueryParams().format === "json"){
+		alert(ajax.responseText);
+	}
+	else{
+		alert(ajax.responseText);
+	}
+	
 
 }
 
@@ -26,3 +34,5 @@ function handleRequestFailure(ajax, exception) {
 	}
 
 }
+
+window.onload = initialLoad;
