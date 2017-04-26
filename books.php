@@ -15,6 +15,8 @@
 		<label for = "finance">Finance</label>
 		<button id="listBooks">List Books</button>
 	</div>
+	<div id="bookCatDiv">
+	</div>
 	<div id="booksDiv">
 	</div>
 </body>
