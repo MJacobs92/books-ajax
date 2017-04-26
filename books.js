@@ -19,7 +19,7 @@ function handleRequestSuccess(ajax) {
 	if(document.URL.toQueryParams().format === "json"){
 		// alert(ajax.responseText);
 		
-		var parsedJSON = JSON.parse(ajax.responseText);
+		var parsedJSON = ajax.responseJSON;
 		$('bookCatDiv').update('<br/>Books in category ' + "\"" + parsedJSON.books[0].category + "\":");
 		//clear div
 		$('booksDiv').update();
@@ -30,7 +30,24 @@ function handleRequestSuccess(ajax) {
         $('booksDiv').insert("</ul>");
 	}
 	else{
-		alert(ajax.responseText);
+		var books = ajax.responseXML.getElementsByTagName("book");
+		var category = books[0].getElementsByTagName("category")[0].firstChild.nodeValue;
+
+		$('bookCatDiv').update('<br/>Books in category ' + "\"" + category + "\":");
+
+		$('booksDiv').update();
+		$('booksDiv').insert("<ul>");
+
+		for (var i = 0; i < books.length; i++) {
+			var title = books[i].getElementsByTagName("title")[0].firstChild.nodeValue;
+			var author = books[i].getElementsByTagName("author")[0].firstChild.nodeValue;
+			var year = books[i].getElementsByTagName("year")[0].firstChild.nodeValue;
+			var price = books[i].getElementsByTagName("price")[0].firstChild.nodeValue;
+
+			$('booksDiv').insert("<li>" + title + ", by " + author + "(" + year + ") - " + price + "</li>");
+		}
+		$('booksDiv').insert("</ul>");
+		// alert(ajax.responseText);
 	}
 	
 
