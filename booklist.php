@@ -49,7 +49,7 @@ if(isset($_GET['category']))
 			$b = $doc->createElement("book");
 
 			$category = $doc->createElement("category");
-			$category->appendChild($doc->createTextNode($book['category']));
+			$category->appendChild($doc->createTextNode($book['name']));
 			$b->appendChild($category);
 
 			$title = $doc->createElement("title");

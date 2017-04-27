@@ -38,7 +38,7 @@ function handleRequestSuccess(ajax) {
 	}
 	else{
 		var books = ajax.responseXML.getElementsByTagName("book");
-		var category = books[0].getElementsByTagName("category")[0].firstChild.nodeValue;
+		var category = books[0].getElementsByTagName("name")[0].firstChild.nodeValue;
 
 		$('bookCatDiv').update('<br/>Books in category ' + "\"" + category + "\":");
 
