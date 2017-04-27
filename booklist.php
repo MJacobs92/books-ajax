@@ -4,7 +4,7 @@
 	  ini_set('display_errors', 1);
       
       
-if(isset($_GET['category'])){
+if(isset($_GET['format'])){
 	$format = $_GET["format"];
 }
 else{

@@ -1,15 +1,21 @@
 "use strict";
 
 function initialLoad() {
-	$('listBooks').onclick = submitRequest;
+	// $('listBooks').onclick = submitRequest;
 
-	 var catCall = new Ajax.Request ("booklist.php",
+  	new Ajax.Request ("booklist.php",
         {
             method: "get",
+            parameters: {format:document.URL.toQueryParams().format},
             onSuccess: showCategories,
             onFailure: handleRequestFailure,
             onException: handleRequestFailure
         });
+}
+
+function requestCategories(){
+	
+
 }
 
 function submitRequest() {
@@ -27,7 +33,7 @@ function handleRequestSuccess(ajax) {
 	if(document.URL.toQueryParams().format === "json"){
 		
 		var parsedJSON = ajax.responseJSON;
-		$('bookCatDiv').update('<br/>Books in category ' + "\"" + parsedJSON.books[0].category + "\":");
+		$('bookCatDiv').update('<br/>Books in category ' + "\"" + parsedJSON.books[0].name + "\":");
 		//clear div
 		$('booksDiv').update();
 		$('booksDiv').insert("<ul>");
@@ -58,6 +64,40 @@ function handleRequestSuccess(ajax) {
 }
 
 function showCategories(ajax) {
+
+	if(document.URL.toQueryParams().format === "json"){
+		var parsedJSON = ajax.responseJSON;
+		for (var i = 0; i < parsedJSON.categories.length; i++) {
+			var radioButton = document.createElement("input");
+	        radioButton.type = "radio";
+	        radioButton.name = "bookCategory";
+	        radioButton.value = parsedJSON.categories[i].name;
+
+	        if(i == 0){
+	        	radioButton.checked = "checked";
+	        }
+        
+	        var radioButtonLabel = document.createElement("label");
+	        var textNode = document.createTextNode(parsedJSON.categories[i].name + " ");
+	        radioButtonLabel.appendChild(textNode);
+	        
+	        $("categories").appendChild(radioButton);
+	        $("categories").appendChild(radioButtonLabel);
+		}
+		 
+		var submitButton = document.createElement("button");
+	    
+	    submitButton.id = "listBooks";
+	    var textNode = document.createTextNode("List Books");
+	    submitButton.appendChild(textNode);
+	    $("categories").appendChild(submitButton);
+
+	    $('listBooks').onclick = submitRequest;
+
+	}
+	else{
+
+	}
 
 	
 }
