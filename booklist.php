@@ -1,9 +1,9 @@
 <?php include("db_connection.php");
 
-	  error_reporting(E_ALL);
-	  ini_set('display_errors', 1);
-      
-      
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
 if(isset($_GET['format'])){
 	$format = $_GET["format"];
 }
@@ -13,7 +13,7 @@ else{
 
 if(isset($_GET['category']))
 {
-   $category = $_GET["category"];
+	$category = $_GET["category"];
 
 	$sqlQuery = "SELECT * FROM Book_Category where name = '" . $category . "';";
 
@@ -84,7 +84,7 @@ else {
 	$categories = [ "categories" => $rows];
 
 	if ($format == "json") {
-	header("Content-type: application/json");
+		header("Content-type: application/json");
 		echo json_encode($categories);
 	}
 	else{
@@ -115,8 +115,5 @@ else {
 	}
 
 }
-
-
-
 
 ?>

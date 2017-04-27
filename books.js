@@ -1,31 +1,24 @@
 "use strict";
 
 function initialLoad() {
-	// $('listBooks').onclick = submitRequest;
-
-  	new Ajax.Request ("booklist.php",
-        {
-            method: "get",
-            parameters: {format:document.URL.toQueryParams().format},
-            onSuccess: showCategories,
-            onFailure: handleRequestFailure,
-            onException: handleRequestFailure
-        });
-}
-
-function requestCategories(){
-	
-
+	new Ajax.Request ("booklist.php",
+	{
+		method: "get",
+		parameters: {format:document.URL.toQueryParams().format},
+		onSuccess: showCategories,
+		onFailure: handleRequestFailure,
+		onException: handleRequestFailure
+	});
 }
 
 function submitRequest() {
-	 new Ajax.Request('/booklist.php', {
-     	method: 'get',
-     	parameters: {format:document.URL.toQueryParams().format, category: $$('input:checked[name="bookCategory"]')[0].value},
-        onSuccess: handleRequestSuccess,
-        onFailure:  handleRequestFailure,
-        onException:  handleRequestFailure
-     });
+	new Ajax.Request('/booklist.php', {
+		method: 'get',
+		parameters: {format:document.URL.toQueryParams().format, category: $$('input:checked[name="bookCategory"]')[0].value},
+		onSuccess: handleRequestSuccess,
+		onFailure:  handleRequestFailure,
+		onException:  handleRequestFailure
+	});
 }
 
 function handleRequestSuccess(ajax) {
@@ -33,14 +26,32 @@ function handleRequestSuccess(ajax) {
 	if(document.URL.toQueryParams().format === "json"){
 		
 		var parsedJSON = ajax.responseJSON;
-		$('bookCatDiv').update('<br/>Books in category ' + "\"" + parsedJSON.books[0].name + "\":");
+
+		var lineBreak = document.createElement("br");
+		var catNameText = document.createTextNode("Books in category " + "\"" + parsedJSON.books[0].name + "\":");
+		
+		//clear div
+		$('bookCatDiv').update();
+		$('bookCatDiv').appendChild(lineBreak);
+		$('bookCatDiv').appendChild(catNameText);
+
+		var list = document.createElement("ul");
+
 		//clear div
 		$('booksDiv').update();
-		$('booksDiv').insert("<ul>");
-        for (var i=0;i<parsedJSON.books.length;i++) {
-        	$('booksDiv').insert("<li>" + parsedJSON.books[i].title + ", by " + parsedJSON.books[i].author + "(" + parsedJSON.books[i].year + ") - " + parsedJSON.books[i].price + "</li>");
-        }
-        $('booksDiv').insert("</ul>");
+		
+
+		for (var i=0;i<parsedJSON.books.length;i++) {
+
+			var listItem = document.createElement("li");
+			var listItemText = document.createTextNode(parsedJSON.books[i].title + ", by " + parsedJSON.books[i].author + " (" + parsedJSON.books[i].year + ") - " + parsedJSON.books[i].price);
+
+			listItem.appendChild(listItemText);
+
+			list.appendChild(listItem);
+
+		}
+		$('booksDiv').appendChild(list);
 	}
 	else{
 		var books = ajax.responseXML.getElementsByTagName("book");
@@ -69,67 +80,63 @@ function showCategories(ajax) {
 		var parsedJSON = ajax.responseJSON;
 		for (var i = 0; i < parsedJSON.categories.length; i++) {
 			var radioButton = document.createElement("input");
-	        radioButton.type = "radio";
-	        radioButton.name = "bookCategory";
-	        radioButton.value = parsedJSON.categories[i].name;
+			radioButton.type = "radio";
+			radioButton.name = "bookCategory";
+			radioButton.value = parsedJSON.categories[i].name;
 
-	        if(i == 0){
-	        	radioButton.checked = "checked";
-	        }
-        
-	        var radioButtonLabel = document.createElement("label");
-	        var textNode = document.createTextNode(parsedJSON.categories[i].name + " ");
-	        radioButtonLabel.appendChild(textNode);
-	        
-	        $("categories").appendChild(radioButton);
-	        $("categories").appendChild(radioButtonLabel);
+			if(i == 0){
+				radioButton.checked = "checked";
+			}
+
+			var radioButtonLabel = document.createElement("label");
+			var textNode = document.createTextNode(parsedJSON.categories[i].name + " ");
+			radioButtonLabel.appendChild(textNode);
+
+			$("categories").appendChild(radioButton);
+			$("categories").appendChild(radioButtonLabel);
 		}
-		 
-		var submitButton = document.createElement("button");
-	    
-	    submitButton.id = "listBooks";
-	    var textNode = document.createTextNode("List Books");
-	    submitButton.appendChild(textNode);
-	    $("categories").appendChild(submitButton);
 
-	    $('listBooks').onclick = submitRequest;
+		var submitButton = document.createElement("button");
+
+		submitButton.id = "listBooks";
+		var textNode = document.createTextNode("List Books");
+		submitButton.appendChild(textNode);
+		$("categories").appendChild(submitButton);
+
+		$('listBooks').onclick = submitRequest;
 
 	}
 	else{
 		var categories = ajax.responseXML.getElementsByTagName("category");
-		// var category = categories[0].getElementsByTagName("name")[0].firstChild.nodeValue;
-
 		for (var i = 0; i < categories.length; i++) {
 
 			var radioButton = document.createElement("input");
-	        radioButton.type = "radio";
-	        radioButton.name = "bookCategory";
-	        radioButton.value = categories[i].getElementsByTagName("name")[0].firstChild.nodeValue;
+			radioButton.type = "radio";
+			radioButton.name = "bookCategory";
+			radioButton.value = categories[i].getElementsByTagName("name")[0].firstChild.nodeValue;
 
-	        if(i == 0){
-	        	radioButton.checked = "checked";
-	        }
-        
-	        var radioButtonLabel = document.createElement("label");
-	        var textNode = document.createTextNode(categories[i].getElementsByTagName("name")[0].firstChild.nodeValue + " ");
-	        radioButtonLabel.appendChild(textNode);
-	        
-	        $("categories").appendChild(radioButton);
-	        $("categories").appendChild(radioButtonLabel);
+			if(i == 0){
+				radioButton.checked = "checked";
+			}
+
+			var radioButtonLabel = document.createElement("label");
+			var textNode = document.createTextNode(categories[i].getElementsByTagName("name")[0].firstChild.nodeValue + " ");
+			radioButtonLabel.appendChild(textNode);
+
+			$("categories").appendChild(radioButton);
+			$("categories").appendChild(radioButtonLabel);
 
 		}
 		var submitButton = document.createElement("button");
-	    
-	    submitButton.id = "listBooks";
-	    var textNode = document.createTextNode("List Books");
-	    submitButton.appendChild(textNode);
-	    $("categories").appendChild(submitButton);
 
-	    $('listBooks').onclick = submitRequest;
+		submitButton.id = "listBooks";
+		var textNode = document.createTextNode("List Books");
+		submitButton.appendChild(textNode);
+		$("categories").appendChild(submitButton);
 
-	}
+		$('listBooks').onclick = submitRequest;
 
-	
+	}	
 }
 
 function handleRequestFailure(ajax, exception) {
