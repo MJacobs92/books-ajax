@@ -44,7 +44,7 @@ function handleRequestSuccess(ajax) {
 	}
 	else{
 		var books = ajax.responseXML.getElementsByTagName("book");
-		var category = books[0].getElementsByTagName("name")[0].firstChild.nodeValue;
+		var category = books[0].getElementsByTagName("category")[0].firstChild.nodeValue;
 
 		$('bookCatDiv').update('<br/>Books in category ' + "\"" + category + "\":");
 
@@ -96,6 +96,36 @@ function showCategories(ajax) {
 
 	}
 	else{
+		var categories = ajax.responseXML.getElementsByTagName("category");
+		// var category = categories[0].getElementsByTagName("name")[0].firstChild.nodeValue;
+
+		for (var i = 0; i < categories.length; i++) {
+
+			var radioButton = document.createElement("input");
+	        radioButton.type = "radio";
+	        radioButton.name = "bookCategory";
+	        radioButton.value = categories[i].getElementsByTagName("name")[0].firstChild.nodeValue;
+
+	        if(i == 0){
+	        	radioButton.checked = "checked";
+	        }
+        
+	        var radioButtonLabel = document.createElement("label");
+	        var textNode = document.createTextNode(categories[i].getElementsByTagName("name")[0].firstChild.nodeValue + " ");
+	        radioButtonLabel.appendChild(textNode);
+	        
+	        $("categories").appendChild(radioButton);
+	        $("categories").appendChild(radioButtonLabel);
+
+		}
+		var submitButton = document.createElement("button");
+	    
+	    submitButton.id = "listBooks";
+	    var textNode = document.createTextNode("List Books");
+	    submitButton.appendChild(textNode);
+	    $("categories").appendChild(submitButton);
+
+	    $('listBooks').onclick = submitRequest;
 
 	}
 
