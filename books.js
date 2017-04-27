@@ -2,6 +2,14 @@
 
 function initialLoad() {
 	$('listBooks').onclick = submitRequest;
+
+	 var catCall = new Ajax.Request ("booklist.php",
+        {
+            method: "get",
+            onSuccess: showCategories,
+            onFailure: handleRequestFailure,
+            onException: handleRequestFailure
+        });
 }
 
 function submitRequest() {
@@ -17,7 +25,6 @@ function submitRequest() {
 function handleRequestSuccess(ajax) {
 
 	if(document.URL.toQueryParams().format === "json"){
-		// alert(ajax.responseText);
 		
 		var parsedJSON = ajax.responseJSON;
 		$('bookCatDiv').update('<br/>Books in category ' + "\"" + parsedJSON.books[0].category + "\":");
@@ -47,10 +54,12 @@ function handleRequestSuccess(ajax) {
 			$('booksDiv').insert("<li>" + title + ", by " + author + "(" + year + ") - " + price + "</li>");
 		}
 		$('booksDiv').insert("</ul>");
-		// alert(ajax.responseText);
 	}
-	
+}
 
+function showCategories(ajax) {
+
+	
 }
 
 function handleRequestFailure(ajax, exception) {
